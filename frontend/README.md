@@ -20,7 +20,7 @@ e2e/verify.mjs    # Playwright 端到端验证
 
 ```bash
 pnpm install       # 安装依赖
-pnpm dev           # 开发服务器 http://localhost:5200
+pnpm dev           # 开发服务器 http://localhost:5173
 pnpm typecheck     # 类型检查
 pnpm test          # 单元测试（Vitest，19 项）
 pnpm build         # 生产构建
@@ -49,7 +49,7 @@ VITE_API_BASE_URL=https://api.example.com pnpm build
 `e2e/verify.mjs` 使用系统已安装的 Chrome（`channel: 'chrome'`），不下载 Playwright 自带浏览器，适配内网环境。
 
 ```bash
-# 需先启动后端 :8000 与前端 :5200
+# 需先启动后端 :8000 与前端 :5173
 node e2e/verify.mjs
 # ===== 结果：25/25 通过 =====
 ```

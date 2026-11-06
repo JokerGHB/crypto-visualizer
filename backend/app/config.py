@@ -65,8 +65,8 @@ class Settings(BaseSettings):
     # 跨域：前端开发地址。NoDecode 让原始字符串直接交给下面的验证器处理，
     # 否则 pydantic-settings 会先按 JSON 解析而拒绝逗号分隔写法。
     cors_origins: Annotated[list[str], NoDecode] = [
-        "http://localhost:5200",
-        "http://127.0.0.1:5200",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
     ]
 
     # AI 服务

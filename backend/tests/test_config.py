@@ -11,7 +11,7 @@ def test_默认配置可加载():
     settings = Settings()
     assert settings.app_name
     assert settings.jwt_algorithm == "HS256"
-    assert "http://localhost:5200" in settings.cors_origins
+    assert "http://localhost:5173" in settings.cors_origins
 
 
 def test_cors_支持逗号分隔(monkeypatch: pytest.MonkeyPatch):

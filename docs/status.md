@@ -124,7 +124,7 @@ cd frontend && node e2e/verify.mjs         # 25/25 passed（需前后端已启�
 ## 七、当前可运行状态
 
 - 后端：`uvicorn app.main:app` 运行于 `127.0.0.1:8000`，`/api/health` 正常
-- 前端：`pnpm dev` 运行于 `localhost:5200`，`/api` 代理连通
+- 前端：`pnpm dev` 运行于 `localhost:5173`，`/api` 代理连通
 - 数据库：SQLite 自动建表，已有测试数据
 - 生产构建：`pnpm build` 成功，产物约 140 KB（gzip 44 KB）
 

@@ -80,7 +80,7 @@ pnpm install
 pnpm dev
 ```
 
-访问 <http://localhost:5200>。开发期 Vite 已把 `/api` 代理到后端，无需处理跨域。
+访问 <http://localhost:5173>。开发期 Vite 已把 `/api` 代理到后端，无需处理跨域。
 
 ### 3. Docker 一键启动
 

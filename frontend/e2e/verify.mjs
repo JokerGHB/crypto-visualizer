@@ -5,13 +5,13 @@
  * 页面能渲染、参数能改、轨迹能算、单步能走、S 盒能查、练习能判分、登录能存历史。
  *
  * 运行：node e2e/verify.mjs
- * 前置：后端 :8000、前端 :5200 均已启动。
+ * 前置：后端 :8000、前端 :5173 均已启动。
  */
 
 import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 
-const WEB = 'http://localhost:5200';
+const WEB = 'http://localhost:5173';
 const SHOT_DIR = 'e2e/screenshots';
 mkdirSync(SHOT_DIR, { recursive: true });
 

@@ -5,10 +5,10 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [vue()],
   server: {
-    // 默认 5173 及相邻端口常被本机其他桌面程序占用（实测 5173、5180-5183 均被占），
-    // 故改用 5200。strictPort 保持 true：端口被占时明确报错，
-    // 避免静默顺延导致实际地址与文档不符、每次都要猜端口。
-    port: 5200,
+    // 固定使用 Vite 默认端口 5173，不做顺延。
+    // strictPort=true：端口被占用时明确报错，便于立刻发现冲突，
+    // 而不是静默换端口导致实际地址与文档不一致。
+    port: 5173,
     strictPort: true,
     // 开发期用代理，避免跨域与环境差异；生产由 Nginx 反代
     proxy: {

@@ -84,7 +84,7 @@ pnpm install
 pnpm dev
 ```
 
-访问 <http://localhost:5200>。开发期 Vite 已配置 `/api` 代理到 `127.0.0.1:8000`，无需额外跨域设置。
+访问 <http://localhost:5173>。开发期 Vite 已配置 `/api` 代理到 `127.0.0.1:8000`，无需额外跨域设置。
 
 ---
 
@@ -220,7 +220,7 @@ docker compose down
 | `DATABASE_URL` | SQLite 文件 | 生产改 MySQL |
 | `JWT_SECRET` | 开发占位值 | **生产必须替换**，泄露可伪造任意用户 |
 | `JWT_EXPIRE_MINUTES` | 1440 | 令牌有效期（分钟） |
-| `CORS_ORIGINS` | 本地 5200 | 生产改为实际域名 |
+| `CORS_ORIGINS` | 本地 5173 | 生产改为实际域名 |
 | `AI_ENABLED` | `true` | 设 `false` 可强制降级 |
 | `AI_BASE_URL` | 空 | OpenAI 兼容接口地址 |
 | `AI_API_KEY` | 空 | 留空则自动降级为本地讲解 |
