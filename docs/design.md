@@ -31,7 +31,7 @@
                    │  SQLite（开发）          │
                    │  MySQL 8（生产）         │
                    └─────────────────────────┘
-支撑层：华为云 CodeArts（代码托管 · 流水线 · 制品）
+支撑层：Git 代码托管 · CI/CD 流水线
 ```
 
 ---
@@ -40,12 +40,12 @@
 
 | 层次 | 选型 | 说明 |
 |---|---|---|
-| 前端框架 | Vue 3 + Vite + TypeScript | 任务书指定 Vue.js |
+| 前端框架 | Vue 3 + Vite + TypeScript | 选型理由：生态成熟，组件化便于拆分可视化视图 |
 | 状态管理 | Pinia | 播放游标与用户态 |
 | 可视化 | CSS Grid + DOM（主）、SVG 思路 | 见 §5.1 设计决策 |
-| 后端 | FastAPI + Uvicorn + Pydantic v2 | 任务书指定 |
+| 后端 | FastAPI + Uvicorn + Pydantic v2 | 项目选型 |
 | ORM | SQLModel | 模型即校验模型 |
-| 数据库 | SQLite / MySQL 8 | 任务书指定二选一 |
+| 数据库 | SQLite / MySQL 8 | 开发用 SQLite 免依赖，生产可切 MySQL |
 | 认证 | JWT + bcrypt（直调，不用 passlib） | 见 §5.5 |
 | AI | OpenAI 兼容 HTTP 流式接口 + 适配层 | 不绑定厂商 |
 | 测试 | pytest / httpx / Vitest / Playwright | 后端 90 项、前端 19 项、E2E 25 项 |
@@ -161,7 +161,7 @@ Trace
 
 **为什么存 trace_json 而不重算**：保证历史回放与当时所见完全一致；算法实现若后续调整（如新增算法），旧记录仍可正确回放。
 
-**为什么不引入 Alembic**：本期为单次课程交付，无跨版本迁移需求；建表用 `SQLModel.metadata.create_all` 幂等执行即可。若后续长期维护，应补迁移工具。
+**为什么不引入 Alembic**：本期为单次交付，无跨版本迁移需求；建表用 `SQLModel.metadata.create_all` 幂等执行即可。若后续长期维护，应补迁移工具。
 
 ### 4.6 AI 辅导设计
 
@@ -202,7 +202,7 @@ Trace
 
 ### 5.1 用 DOM + CSS Grid 而非 Canvas 渲染状态矩阵
 
-任务书要求掌握 Canvas/SVG。权衡后选择 DOM：
+关于渲染方式的权衡：
 
 1. 单元格需要点击事件查看字节来历，DOM 事件比 Canvas 命中检测简单可靠；
 2. 每格高亮过渡直接用 CSS `transition`，无需手写动画循环；
@@ -253,7 +253,7 @@ Canvas 的价值在大量位移动画，若后续要做「字节飞入飞出」�
 | 信息泄露 | 安全响应头、生产环境隐藏详细错误、不返回口令字段 | `main.py` |
 | 合规 | 仅采集用户名与口令散列，不采集手机号等敏感信息；提供记录删除 | 全局 |
 
-**合规要点**（对应任务书模块 6）：
+**安全要点**：
 - 《网络安全法》：采取技术措施保障网络安全，本项目落实输入校验与访问控制。
 - 《数据安全法》：数据分类分级与最小必要，本项目仅存学习记录。
 - 《个人信息保护法》：最小必要原则、用户可删除本人数据（`DELETE /api/history/sessions/{id}`）。

@@ -1,6 +1,6 @@
 """安全响应头中间件。
 
-落实任务书模块 6 的 Web 安全开发要求：
+落实 Web 安全开发要求：
 - XSS 缓解：CSP 限制脚本来源，配合前端不使用 v-html
 - 点击劫持：X-Frame-Options
 - MIME 嗅探：X-Content-Type-Options

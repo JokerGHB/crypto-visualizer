@@ -1,6 +1,6 @@
 # 完成情况清单
 
-对照任务书模块要求，逐项核对。状态说明：✅ 已完成并验证 · ⚠️ 部分完成 · ❌ 未做
+逐项核对。状态说明：✅ 已完成并验证 · ⚠️ 部分完成 · ❌ 未做
 
 ---
 
@@ -27,13 +27,13 @@
 | F-17 | 错题回跳 | ✅ | 返回 stepIndex，前端跳转动画 |
 | F-18 | 接口文档 | ✅ | `/docs` 自动生成，可在线调试 |
 | F-19 | 安全防护 | ✅ | 见第三节，全部实测通过 |
-| F-20 | 部署与流水线 | ✅ | `docker-compose.yml`、`.codearts/pipeline.yml` |
+| F-20 | 部署与流水线 | ✅ | `docker-compose.yml`、`.github/workflows/ci.yml` |
 | F-21 | 单格字节来源查询 | ✅ | 点击矩阵格显示 before/after/aux；E2E-09 |
 | F-22 | 加解密联动 | ✅ | 切换模式自动填入上次输出 |
 
 ---
 
-## 二、任务书模块对照
+## 二、功能模块对照
 
 | 模块 | 要求 | 状态 | 实现 |
 |---|---|---|---|
@@ -45,7 +45,7 @@
 | 模块 6 | 安全与合规 | ✅ | 见第三节 |
 | 模块 7 | 测试 | ✅ | 139 项全绿，`docs/test-report.md` |
 | 模块 8 | 部署 | ✅ | `docs/deploy.md`，Docker + Nginx |
-| 模块 9 | 代码管理 | ✅ | Git 分支 + CodeArts 流水线 |
+| 模块 9 | 代码管理 | ✅ | Git 分支 + CI 流水线 |
 
 ---
 
@@ -103,7 +103,7 @@ cd frontend && node e2e/verify.mjs         # 25/25 passed（需前后端已启�
 | 数据契约 | `docs/contracts/trace.md` | ✅ |
 | 说明文档 | `README.md` | ✅ |
 | 容器化 | `docker-compose.yml`、两个 `Dockerfile`、`nginx.conf` | ✅ |
-| CI/CD | `.codearts/pipeline.yml` | ✅ |
+| CI/CD | `.github/workflows/ci.yml` | ✅ |
 | 参考实现 | `verify/verify_aes.py`（独立对拍用） | ✅ |
 
 ---
@@ -112,9 +112,8 @@ cd frontend && node e2e/verify.mjs         # 25/25 passed（需前后端已启�
 
 | 项目 | 状态 | 原因 |
 |---|---|---|
-| 演示 PPT | ❌ | 需在文档定稿后制作，属最后一步 |
 | Firefox / Safari 实测 | ❌ | 环境仅有 Chrome/Edge，已在风险中记录 |
-| 移动端适配 | ❌ | 本期范围外，任务书未要求 |
+| 移动端适配 | ❌ | 本期范围外 |
 | Alembic 迁移 | ❌ | 单次交付无跨版本迁移需求，已在设计文档说明取舍 |
 | Redis 限流 | ❌ | 单实例部署够用，多实例需替换，已记录 |
 | DES / SM4 / RSA | ❌ | 选做项，本期聚焦 AES 深度 |

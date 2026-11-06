@@ -2,9 +2,6 @@
 
 AES 加解密的每一步都看得见，并且能停下来问 AI「这里为什么这样变」。
 
-课程：企业项目训练 II · 方向一 · 网络工程 231/232/233
-开发平台：华为云 CodeArts
-
 ---
 
 ## 项目简介
@@ -127,7 +124,7 @@ crypto-visualizer/
 │   └── status.md              # 完成情况清单
 ├── verify/                    # 独立参考实现，用于对拍
 ├── docker-compose.yml
-└── .codearts/pipeline.yml     # CodeArts 流水线
+└── .github/workflows/ci.yml   # CI 流水线
 ```
 
 ---
@@ -215,4 +212,4 @@ passlib 1.7.4 与 bcrypt 5.x 不兼容（读取已移除的 `bcrypt.__about__.__
 
 ## 许可
 
-本项目为课程作业，仅用于教学演示。
+本项目仅用于教学演示。
