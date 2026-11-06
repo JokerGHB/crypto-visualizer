@@ -1,0 +1,21 @@
+# 后端运行与测试依赖
+# 安装：pip install -r requirements.txt
+#
+# 注意：本项目不使用 passlib（与 bcrypt 5.x 不兼容），口令散列直接调用 bcrypt。
+
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+sqlmodel==0.0.48
+pydantic==2.14.3
+pydantic-settings==2.16.2
+python-jose[cryptography]==3.5.0
+bcrypt==5.0.0
+httpx==0.28.1
+python-dotenv==1.2.4
+
+# 测试
+pytest==9.2.0
+pytest-asyncio==1.4.1.post1
+
+# 生产数据库驱动（SQLite 开发环境无需安装）
+# pymysql==1.1.1
