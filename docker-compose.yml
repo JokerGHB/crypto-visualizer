@@ -13,9 +13,10 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost}
       AI_ENABLED: ${AI_ENABLED:-true}
       AI_BASE_URL: ${AI_BASE_URL:-}
-      AI_API_KEY: ${AI_API_KEY:-}
+      # 密钥从宿主机环境 GPT_API_KEY 传入，不写在任何文件里
+      GPT_API_KEY: ${GPT_API_KEY:-}
       AI_MODEL: ${AI_MODEL:-}
-      AI_TIMEOUT: ${AI_TIMEOUT:-10}
+      AI_TIMEOUT: ${AI_TIMEOUT:-90}
       AI_RATE_LIMIT_PER_MINUTE: ${AI_RATE_LIMIT_PER_MINUTE:-20}
     depends_on:
       db:

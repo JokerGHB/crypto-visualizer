@@ -228,47 +228,70 @@ docker compose down
 | `AI_TIMEOUT` | `90` | 单次请求超时（秒） |
 | `AI_RATE_LIMIT_PER_MINUTE` | `20` | 每用户每分钟次数 |
 
-### AI 密钥的三种配置方式
+### AI 密钥配置
 
 优先级：**真实环境变量 > `.env` 文件 > 代码默认值**。
 
-**方式一：环境变量（推荐，密钥不落盘）**
+**推荐做法：环境变量设一次，`.env` 写占位符**
+
+密钥只需设置一次，之后每次启动都不用手输：
 
 ```powershell
-# Windows 临时（仅当前终端）
-$env:GPT_API_KEY = 'sk-你的密钥'
-uvicorn app.main:app --port 8000
-
-# Windows 永久（写入用户变量，需重开终端）
+# ① 一次性设置（写入用户环境变量，永久有效）
 [Environment]::SetEnvironmentVariable('GPT_API_KEY', 'sk-你的密钥', 'User')
+
+# ② 之后每次启动，直接跑即可
+cd backend
+.venv\Scripts\python.exe -m uvicorn app.main:app --port 8000
 ```
 
-```bash
-# Linux / macOS
-export GPT_API_KEY='sk-你的密钥'
-```
-
-支持三个变量名，按此顺序优先：`GPT_API_KEY` → `AI_API_KEY` → `OPENAI_API_KEY`。
-
-**方式二：`.env` 文件（简单，换机器方便）**
+`.env` 里对应写占位符，由 python-dotenv 自动展开：
 
 ```ini
-AI_API_KEY=sk-你的密钥
-AI_BASE_URL=https://your-provider/v1
-AI_MODEL=your-model
+AI_API_KEY=${GPT_API_KEY}
 ```
 
-`.env` 已在 `.gitignore` 中，不会进仓库。但要意识到它在磁盘上明文存在。
+变量缺失时该行解析为空串，AI 自动降级为本地讲解——不会报错，也不会把字面量 `${GPT_API_KEY}` 当密钥。
 
-**方式三：容器环境变量**
+> **注意**：设置环境变量后，**已经打开的终端读不到**。因为进程环境是启动时的快照，不是实时查询注册表。所以设置完需要重开一次终端（或重启 IDE）。之后新开的终端都会自动继承，不必再设第二次。
+
+**不推荐的两种写法**
+
+```ini
+# ✗ 直接把密钥写进 .env：能跑，但密钥在磁盘明文存在
+AI_API_KEY=sk-你的密钥
+```
+
+```powershell
+# ✗ 每次启动前手动 export：确实要每次输，很麻烦
+$env:GPT_API_KEY = 'sk-你的密钥'
+```
+
+第二种只在临时调试（不想污染全局变量）时才用。
+
+**另一种等价思路：不在 `.env` 写占位符**
+
+因为本项目直接读取环境变量名，所以 `.env` 里 `AI_API_KEY` 留空、只靠 `GPT_API_KEY` 也能工作：
+
+```ini
+AI_API_KEY=
+```
+
+代码会按 `GPT_API_KEY` → `AI_API_KEY` → `OPENAI_API_KEY` 顺序查找。写占位符的好处是**看 `.env` 就能知道密钥来自哪个变量**，意图更明确。
+
+**容器部署**
 
 ```yaml
 # docker-compose.yml
 environment:
-  GPT_API_KEY: ${GPT_API_KEY}
+  GPT_API_KEY: ${GPT_API_KEY:-}
 ```
 
-密钥来自宿主机环境，不写在 compose 文件里。
+密钥从宿主机环境传入容器，compose 文件里不含密钥。启动前确保宿主机已设置该变量。
+
+**关于 `${VAR:默认值}` 语法**
+
+bash 的 `${VAR:-default}` 写法**不被支持**，会被当字面量原样保留。python-dotenv 只支持 `${VAR}` 和 `$VAR` 两种形式。需要默认值时请写在代码的字段默认值里，而不是 `.env` 中。
 
 ### 启动自检
 
