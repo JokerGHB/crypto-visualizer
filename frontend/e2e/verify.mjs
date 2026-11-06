@@ -193,17 +193,40 @@ try {
   record('练习判分返回结果', Boolean(verdict), verdict?.trim() ?? '空');
   await page.screenshot({ path: `${SHOT_DIR}/05-exercise.png`, fullPage: true });
 
-  // ---------- 10. AI 辅导降级 ----------
+  // ---------- 10. AI 辅导（在线或降级都必须出内容） ----------
   await page.goto(`${WEB}/playground`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(1500);
   const aiTextarea = page.locator('.composer textarea');
   await aiTextarea.fill('这一步为什么要把 19 变成 d4？');
   await page.locator('button', { hasText: '发送' }).click();
-  await page.waitForTimeout(3000);
+
+  // 真实 AI 首字节可能 10~45 秒，轮询等待而非固定 sleep
+  let aiReply = '';
+  for (let i = 0; i < 45; i += 1) {
+    await page.waitForTimeout(2000);
+    const n = await page.locator('.bubble.assistant').count();
+    if (n === 0) {
+      continue;
+    }
+    const text = await page.locator('.bubble.assistant .content').first().textContent();
+    if (text && text.trim() && !text.includes('思考中')) {
+      aiReply = text;
+      break;
+    }
+  }
 
   const bubbles = await page.locator('.bubble.assistant').count();
-  const aiReply = await page.locator('.bubble.assistant .content').first().textContent();
-  record('AI 面板返回内容', bubbles >= 1 && Boolean(aiReply), aiReply?.slice(0, 40) ?? '空');
+  record(
+    'AI 面板返回内容',
+    bubbles >= 1 && Boolean(aiReply),
+    aiReply?.slice(0, 50) ?? '超时未返回',
+  );
+  // 降级也是合法路径，但需能区分，便于确认密钥是否真的生效
+  record(
+    'AI 走在线回答（非降级）',
+    Boolean(aiReply) && !aiReply.includes('离线'),
+    aiReply.includes('离线') ? '走了降级路径' : '在线',
+  );
   await page.screenshot({ path: `${SHOT_DIR}/06-ai.png`, fullPage: true });
 
   // ---------- 11. 控制台无错误 ----------

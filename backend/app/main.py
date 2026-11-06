@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -20,12 +21,18 @@ from app.middleware.security_headers import SecurityHeadersMiddleware
 from app.routers import ai, auth, crypto, exercise, history
 
 settings = get_settings()
+logger = logging.getLogger("app.config")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """启动时建表。"""
+    """启动时建表并打印配置自检。
+
+    自检只打印脱敏信息（密钥仅显示末 4 位），必要时会提示缺失项，
+    避免出现「AI 一直降级但不知道为什么」的排查困境。
+    """
     init_db()
+    logger.info(settings.startup_report())
     yield
 
 

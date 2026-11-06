@@ -225,8 +225,74 @@ docker compose down
 | `AI_BASE_URL` | 空 | OpenAI 兼容接口地址 |
 | `AI_API_KEY` | 空 | 留空则自动降级为本地讲解 |
 | `AI_MODEL` | 空 | 模型标识 |
-| `AI_TIMEOUT` | `10` | 单次请求超时（秒） |
+| `AI_TIMEOUT` | `90` | 单次请求超时（秒） |
 | `AI_RATE_LIMIT_PER_MINUTE` | `20` | 每用户每分钟次数 |
+
+### AI 密钥的三种配置方式
+
+优先级：**真实环境变量 > `.env` 文件 > 代码默认值**。
+
+**方式一：环境变量（推荐，密钥不落盘）**
+
+```powershell
+# Windows 临时（仅当前终端）
+$env:GPT_API_KEY = 'sk-你的密钥'
+uvicorn app.main:app --port 8000
+
+# Windows 永久（写入用户变量，需重开终端）
+[Environment]::SetEnvironmentVariable('GPT_API_KEY', 'sk-你的密钥', 'User')
+```
+
+```bash
+# Linux / macOS
+export GPT_API_KEY='sk-你的密钥'
+```
+
+支持三个变量名，按此顺序优先：`GPT_API_KEY` → `AI_API_KEY` → `OPENAI_API_KEY`。
+
+**方式二：`.env` 文件（简单，换机器方便）**
+
+```ini
+AI_API_KEY=sk-你的密钥
+AI_BASE_URL=https://your-provider/v1
+AI_MODEL=your-model
+```
+
+`.env` 已在 `.gitignore` 中，不会进仓库。但要意识到它在磁盘上明文存在。
+
+**方式三：容器环境变量**
+
+```yaml
+# docker-compose.yml
+environment:
+  GPT_API_KEY: ${GPT_API_KEY}
+```
+
+密钥来自宿主机环境，不写在 compose 文件里。
+
+### 启动自检
+
+后端启动时打印脱敏摘要，密钥只显示末 4 位：
+
+```
+配置自检:
+  DEBUG            = True
+  DATABASE_URL     = sqlite:///./crypto_visualizer.db
+  JWT_SECRET       = 使用开发默认值（生产必须替换）
+  AI_BASE_URL      = https://your-provider/v1
+  AI_MODEL         = your-model
+  AI_API_KEY       = ***Z7QW
+  密钥来源         = GPT_API_KEY
+  AI 状态          = 已就绪
+```
+
+若显示「未就绪，将降级为本地讲解」，会同时列出缺失项与修复提示，不必再猜「为什么 AI 一直离线」。
+
+### AI 超时为什么要设 90 秒
+
+实测某兼容端点首字节延迟在 10~45 秒之间波动。原默认值 10 秒会导致**稳定超时降级**——用户看到「AI 服务不可用」，但实际链路是通的，只是慢。
+
+流式输出下首字节到达后文字逐字出现，放宽超时不会让人觉得卡住。若服务商响应很快，可调回 15~30 秒。
 
 生产环境检查清单：
 
